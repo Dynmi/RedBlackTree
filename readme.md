@@ -14,6 +14,15 @@
 - If a node is red, then its parent is black.
 - All simple paths from any node X to a descendant leaf have the same number of black nodes = black-height(X).
 
+## Time Complexity
+
+| Opereation | Average | Worst Case |
+| ---- | ---- | ---- |
+| Space | O(N) | O(N) |
+| Search | O(logN) | O(logN) |
+| Insert | O(logN) | O(logN) |
+| Delete | O(logN) | O(logN) |
+
 ## Reference
 
 - https://www.cs.usfca.edu/~galles/visualization/RedBlack.html

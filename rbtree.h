@@ -1,9 +1,10 @@
 //
 // Interface of Red-Black Tree
-// author@HarisWang
 //
-#ifndef rbTree_H_
-#define rbTree_H_
+// author: Haris Wang, dynmiw@gmail.com
+//
+#ifndef RBTREE_H_
+#define RBTREE_H_
 
 #include <cstdlib>
 #include <cstring>
@@ -28,13 +29,13 @@ struct rbNode {
 	rbNode	*right;
 
 	rbNode():parent(nullptr),left(nullptr),right(nullptr),color(RED){}
-	~rbNode() 
-    {
-        if (left != nullptr)
-            delete left;
-        if (right != nullptr)
-            delete right;
-    }
+	~rbNode()
+   	{
+        	if (left != nullptr)
+        	    delete left;
+        	if (right != nullptr)
+        	    delete right;
+    	}
 };
 
 
@@ -46,7 +47,7 @@ class rbTree {
 		void	insert(K &key, T &val);
 		bool	remove(const K &key);
 		bool	search(const K &key, T &val) const;
-        void	clear();
+        	void	clear();
 		void	printTree() const;
 		int     getSize() const;
 	private:
@@ -107,25 +108,25 @@ void rbTree<K,T>::insert(K &key, T &val)
 	while (curr->color == RED && curr->parent != nullptr)
 	{
 		bool isRight = (curr == curr->parent->right);
-        rbNode<K,T> *uncle;
-        if (isRight)
-            uncle = curr->parent->left;
-        else
-            uncle = curr->parent->right;
+        	rbNode<K,T> *uncle;
+        	if (isRight)
+       	        	uncle = curr->parent->left;
+       	 	else
+            		uncle = curr->parent->right;
 
-        if (uncle == nullptr) {
-            curr->color = BLACK;
-            curr->parent->color = RED; 
-            if (uncle == curr->parent->right) {
-                rightRotate(curr->parent);
-            }else {
-                leftRotate(curr->parent);
-            }
-            break;
-        }else if (uncle->color == RED) {
+        	if (uncle == nullptr) {
+            		curr->color = BLACK;
+            		curr->parent->color = RED; 
+            		if (uncle == curr->parent->right) {
+                		rightRotate(curr->parent);
+            		}else {
+                		leftRotate(curr->parent);
+            		}
+            		break;
+        	}else if (uncle->color == RED) {
 			curr->color = BLACK;
 			uncle->color = BLACK;
-      		curr->parent->color = RED;
+      			curr->parent->color = RED;
 			curr = curr->parent;
 		}else {
 			curr->color = BLACK;
@@ -145,7 +146,7 @@ void rbTree<K,T>::insert(K &key, T &val)
 				rightRotate(curr->parent);
 			}
 		}
-    	root->color = BLACK;
+    		root->color = BLACK;
 	}
 
 	this->size++;
@@ -177,7 +178,7 @@ bool rbTree<K,T>::remove(const K &key)
 	
   	this->removeNode(curr);
   	(this->size)--;
-    return 1;
+    	return 1;
 }
 
 
@@ -188,94 +189,101 @@ void rbTree<K,T>::removeNode(rbNode<K, T> *node)
 {
 	if (node->color == RED) {
 		if (node->left != nullptr && node->right != nullptr) {
-            // child x 2
-            // find successor, then fill 'node' with successor
-            auto successor = node->right;
-            while (successor->left != nullptr)
-                successor = successor->left;
-            node->key = successor->key;
-            node->val = successor->val;
-            this->removeNode(successor);
-        }else if (node->left != nullptr) {
-            // only left child
-            // fill 'node' with left child
-            node->key = node->left->key;
-            node->val = node->left->val;
-            node->color = node->left->color;
-            this->removeNode(node->left);
-        }else if (node->right != nullptr) {
-            // only right child
-            // fill 'node' with right child
-            node->key = node->right->key;
-            node->val = node->right->val;
-            node->color = node->right->color;        
-            this->removeNode(node->right);
-        }else {
-            // no child
-            if (node->parent == nullptr) {
-                free(node);
-                root = nullptr;
-            }else {
-                if (node->parent->left == node)
-                    node->parent->left = nullptr;
-                else
-                    node->parent->right = nullptr;
-                free(node);
-            }
-        }
+            		// child x 2
+            		// find successor, then fill 'node' with successor
+            		auto successor = node->right;
+            		while (successor->left != nullptr)
+                		successor = successor->left;
+            		node->key = successor->key;
+            		node->val = successor->val;
+            		this->removeNode(successor);
+        	}else if (node->left != nullptr) {
+            		// only left child
+            		// fill 'node' with left child
+            		node->key = node->left->key;
+            		node->val = node->left->val;
+            		node->color = node->left->color;
+           		this->removeNode(node->left);
+        	}else if (node->right != nullptr) {
+            		// only right child
+            		// fill 'node' with right child
+            		node->key = node->right->key;
+            		node->val = node->right->val;
+            		node->color = node->right->color;        
+            		this->removeNode(node->right);
+        	}else {
+            		// no child
+            		if (node->parent == nullptr) {
+                		free(node);
+                		root = nullptr;
+				return;
+            		}
+
+                	if (node->parent->left == node)
+                		node->parent->left = nullptr;
+                	else
+                    		node->parent->right = nullptr;
+                	
+			free(node);
+		}
  	}else {
-        if (node->left != nullptr && node->right != nullptr) {
-            // child x 2
-            // find successor, then fill 'node' with successor
-            auto successor = node->right;
-            while (successor->left != nullptr)
-                successor = successor->left;
-            node->key = successor->key;
-            node->val = successor->val;
-            this->removeNode(successor);
-        }else if (node->left != nullptr) {
-            // only left child
-            // fill 'node' with left child
-            node->key = node->left->key;
-            node->val = node->left->val;
-            this->removeNode(node->left);
-        }else if (node->right != nullptr) {
-            // only right child
-            // fill 'node' with right child
-            node->key = node->right->key;
-            node->val = node->right->val;
-            this->removeNode(node->right);
-        }else {
-            // no child. As the black node deleted is a leaf, fixup
-            // is neccesary after delete.
-            if (node->parent == nullptr) {
-                free(node);
-                root = nullptr;
-            }else {
-                if (node->parent->left == node) {
-                    node->parent->left = nullptr;    
-                    if (node->parent->right != nullptr
-                        && node->parent->right->color == RED) {
-                        node->parent->right->color = BLACK;
-                        leftRotate(node->parent);
-                    }
-                }else {
-                node->parent->right = nullptr;
-                    if (node->parent->left != nullptr
-                        && node->parent->left->color == RED) {
-                        node->parent->left->color = BLACK;
-                        rightRotate(node->parent);
-                    }
-                }
-                if (node->parent->left == nullptr
-                    && node->parent->right == nullptr
-                    && node->parent->parent != nullptr) {
-                    // you can guess, 'node->parent->parent' must be RED
-                    rightRotate(node->parent->parent);
-                }
-                free(node);
-            }
-        }    
+        	if (node->left != nullptr && node->right != nullptr) {
+        		// child x 2
+            		// find successor, then fill 'node' with successor
+            		auto successor = node->right;
+            		while (successor->left != nullptr)
+                		successor = successor->left;
+            		node->key = successor->key;
+            		node->val = successor->val;
+            		this->removeNode(successor);
+        	}else if (node->left != nullptr) {
+            		// only left child
+            		// fill 'node' with left child
+            		node->key = node->left->key;
+            		node->val = node->left->val;
+            		this->removeNode(node->left);
+        	}else if (node->right != nullptr) {
+            		// only right child
+            		// fill 'node' with right child
+            		node->key = node->right->key;
+            		node->val = node->right->val;
+            		this->removeNode(node->right);
+        	}else {
+            		// no child. As the black node deleted is a leaf, fixup
+            		// is neccesary after delete.
+            		
+			if (node->parent == nullptr) {
+                		// 'node' is root
+				free(node);
+                		root = nullptr;
+            			return;
+			}
+
+                	if (node->parent->left == node) {
+                    		node->parent->left = nullptr;    
+                    		if (node->parent->right != nullptr
+                        	&& node->parent->right->color == RED) {
+                        		node->parent->right->color = BLACK;
+                        		leftRotate(node->parent);
+                    		}
+                	}else {
+                		node->parent->right = nullptr;
+                    		if (node->parent->left != nullptr
+                        	&& node->parent->left->color == RED) {
+                        		node->parent->left->color = BLACK;
+                        		rightRotate(node->parent);
+                    		}
+                	}
+
+                	if (node->parent->left == nullptr
+                    	&& node->parent->right == nullptr
+                    	&& node->parent->parent != nullptr) {
+                    		// you can guess, 'node->parent->parent' must be RED
+                    		rightRotate(node->parent->parent);
+                	}
+
+                	free(node);
+        	}    
 	}
 }
 
@@ -297,13 +305,13 @@ bool rbTree<K,T>::search(const K &key, T &val) const
 
 		if (cmp(key, curr->key) < 0)
 			curr = curr->left;
-        else
+        	else
 			curr = curr->right;
 	}
     
-    if (curr->key != key)
-        return 0;
-    return 1;
+	if (curr->key != key)
+    		return 0;
+    	return 1;
 }
 
 
@@ -315,10 +323,11 @@ template<class K, class T>
 int rbTree<K,T>::cmp(const K &a, const K &b) const
 {
 	if (typeid(a) == typeid(char*)) {
+		// string type
 		char *x = (char *)a;
 		char *y = (char *)b;
 		return strcmp(x, y);
-  	}else {   
+  	}else {
 		if (a < b) return -1;
 		if (a == b) return 0;
 		if (a > b) return 1;
@@ -345,12 +354,12 @@ void rbTree<K,T>::leftRotate(rbNode<K,T> *node)
   	// update the parent
   	if (root == node) {
   		root = temp;
- 	}else {
-		if (temp->parent->left == node)
-	    	temp->parent->left = temp;
-        else
-            temp->parent->right = temp;
-	}
+		return;
+ 	}
+	if (temp->parent->left == node)
+    		temp->parent->left = temp;
+       	else
+           	temp->parent->right = temp;
 }
 
 
@@ -364,7 +373,7 @@ void rbTree<K,T>::rightRotate(rbNode<K,T> *node)
   	// update the two nodes
 	node->left = temp->right;
 	if (temp->right != nullptr)
-    	temp->right->parent = node;
+    		temp->right->parent = node;
 	temp->right = node;
 	temp->parent = node->parent;
 	node->parent = temp;
@@ -372,12 +381,12 @@ void rbTree<K,T>::rightRotate(rbNode<K,T> *node)
 	// update the parent
 	if (root == node) {
 		root = temp;
-	}else {
-		if (temp->parent->left == node)
-			temp->parent->left = temp;
-		else
-      		temp->parent->right = temp;
+		return;
 	}
+	if (temp->parent->left == node)
+		temp->parent->left = temp;
+	else
+      		temp->parent->right = temp;
 }
 
 
@@ -446,4 +455,4 @@ void rbTree<K,T>::clear()
 }
 
 
-#endif  // rbTree_H_
+#endif  // RBTREE_H_
